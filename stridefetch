@@ -1,0 +1,67 @@
+#!/usr/bin/env python3
+
+import os
+from random import choice
+from distro import name as distro
+from platform import release as kernel
+import argparse
+
+resetcode = "\033[0m\033[39m"
+
+flags_list = {
+    "lgbtqia": [196, 202, 190, 28, 20, 91],
+    "trans": [81, 211, 255, 211, 81],
+    "bisexual": [198, 198, 97, 25, 25],
+    "lesbian": [202, 209, 255, 168, 161],
+}
+
+def login():
+    return os.getlogin()
+
+def hostname():
+    return os.uname()[1]
+
+def get_uptime():
+    with open('/proc/uptime', 'r') as i:
+        uptime_seconds = float(i.readline().split()[0])
+    uptime_minutes = int(uptime_seconds // 60)
+    uptime_hours = int(uptime_minutes // 60)
+    uptime_minhour = uptime_minutes % 60
+    return str(uptime_hours) + 'h ' + str(uptime_minhour) + 'm'
+
+def color(col, fg_bg):
+    # Turns terminal colors into ANSI escape sequences
+    return f"\033[{48 if fg_bg == 'bg' else 38};5;{col}m"
+
+def fetch(flag_name):
+
+    flag = flags_list[flag_name]
+    flag_width = len(flag) * 4
+
+    fdata = [
+        f"\033[1m{color(255,'fg') + login()}@{hostname() + resetcode}",
+        f"{color(225,'fg')}os       {color(255, 'fg') + distro() + resetcode}",
+        f"{color(225,'fg')}uptime   {color(255, 'fg') + get_uptime() + resetcode}",
+        f"{color(225,'fg')}kernel   {color(255, 'fg') + kernel() + resetcode}",
+        # Empty lines to ensure there's no duplicates
+        "",
+        "",
+        "",
+        ""
+    ]
+
+    # Print empty line to have space between the fetch and the command
+    print()
+
+    for i, row in enumerate(flag):
+        print(f" {color(row, 'bg')}{' ' * flag_width}{resetcode} {fdata[min(i, len(fdata) - 1)]}{resetcode}")
+
+parser = argparse.ArgumentParser(description='Test.')
+parser.add_argument('-f', action='store', type=str, help='Flag to print.')
+
+args = parser.parse_args()
+
+if args.f not in flags_list:
+    fetch(choice(list(flags_list.keys())))
+else:
+    fetch(args.f)
