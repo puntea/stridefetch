@@ -1,5 +1,5 @@
 # stridefetch 
-![image](https://user-images.githubusercontent.com/104102985/164504590-76641413-1c42-47b8-9a19-c9d60f6adc26.png)
+![image](https://user-images.githubusercontent.com/104102985/166218448-cacda0e2-b1c8-412c-b9a8-bb98d899e396.png)
 
 Small fetch script made in Python. Displays OS, uptime and a random pride flag.
 ## Usage
